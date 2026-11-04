@@ -86,7 +86,7 @@ JSON stores ordinary data rather than live Python objects. Save each person's at
 * [ ] Pressing `q` quits the simulation.
 * [ ] Pressing Space pauses and unpauses the simulation.
 * [ ] Pressing `f` toggles fast-forward mode on and off.
-* [ ] The simulation ends automatically when every person is either dead or recovered, including a mix of both statuses.
+* [ ] The simulation ends automatically when there are no infected people left.
 
 ### Recorded Data and Graphs
 
