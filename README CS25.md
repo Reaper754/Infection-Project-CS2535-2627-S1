@@ -39,9 +39,10 @@ This project combines functions, modules, lists, dictionaries, and file handling
 * [ ] The population size matches the user's population count.
 * [ ] The starting immune population is determined by the user's immunity percentage.
 * [ ] Infection checks use the user's transmissibility distance and infectiousness percentage.
-* [ ] Infection checks for immune people use the user's immunity efficacy percentage.
+* [ ] After an immune person is successfully infected from a regular infection check, check to see if their immunity protects them using the immunity efficacy percentage.
 * [ ] Daily death checks for infected people use the user's lethality percentage.
 * [ ] Daily recovery checks for infected people use the user's recoverability percentage.
+* [ ] A timer is used to simulate days where each day represents 5 seconds of normal time.
 
 ### Simulation Visualization and Controls
 
@@ -58,7 +59,7 @@ This project combines functions, modules, lists, dictionaries, and file handling
 * [ ] Resuming a simulation uses the CSV identified in its JSON save for subsequent daily records.
 * [ ] Pressing `q` quits the simulation.
 * [ ] Pressing Space pauses and unpauses the simulation.
-* [ ] Pressing `f` toggles fast-forward mode on and off.
+* [ ] Pressing `f` toggles fast-forward mode on and off. Fast forward should speed the simulation up to be 5 times faster.
 * [ ] The simulation ends automatically when there are no more infected people.
 
 ### Recorded Data and Graphs
