@@ -64,7 +64,6 @@ This project combines functions, modules, lists, dictionaries, and file handling
 ### Recorded Data and Graphs
 
 * [ ] At the end of every simulation day, a new row containing the day number and counts of infected, recovered, susceptible, and dead people is appended to the active CSV file.
-* [ ] Daily CSV recording happens automatically without requiring the user to press `s`.
 * [ ] Appending daily records preserves the existing rows in the CSV file.
 * [ ] The CSV file also records the trial's starting input values.
 * [ ] Each new simulation run, including a rerun of a saved simulation, creates a uniquely named CSV file without overwriting an existing run's file.
