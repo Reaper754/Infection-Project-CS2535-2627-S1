@@ -4,7 +4,7 @@ Create a visual simulation of an infection spreading through a population. Users
 
 When the program starts, the user first interacts with a terminal menu. This menu lets them start a new simulation or view previous simulation data. It also provides the options to resume or rerun a saved simulation and exit the program. The Pygame simulation window opens when the user chooses to start, resume, or rerun a simulation.
 
-This project combines functions, modules, lists, dictionaries, and file handling. Build it in manageable stages. Start with the terminal menu and population data. Then add movement, infection rules, saving, and graphing. Test each feature as you add it. The [recommended development process](development_process.md) provides a suggested order, and the [How To references](_Help/How%20To) explain useful library features.
+This project combines functions, modules, lists, dictionaries, and file handling. Build it in manageable stages. Start with the terminal menu and population data. Then add movement, infection rules, saving, and graphing. Test each feature as you add it. The [recommended development process](development_process.md) provides a suggested order, and the [How To references](_Help/How%20To%20-%20CS25) explain useful library features.
 
 ## Project Requirements Checklist
 

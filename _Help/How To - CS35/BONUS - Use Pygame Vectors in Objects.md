@@ -22,16 +22,17 @@ class Movement:
         self.position = pygame.Vector2(position)
         self.velocity = pygame.Vector2(velocity)
 
-    def move(self, seconds: float) -> None:
-        """Advance the position by the given elapsed time."""
-        self.position += self.velocity * seconds
+    def move(self, delta: float) -> None:
+        """Advance the position by the given elapsed time in seconds."""
+        self.position += self.velocity * delta
 
 
 movement = Movement(pygame.Vector2(100, 300), pygame.Vector2(60, 0))
 
 def run_sim():
-    seconds = clock.get_time() / 1000
-    movement.move(seconds)
+    delta = clock.get_time() / 1000
+    # Update the position before drawing.
+    movement.move(delta)
     pygame.draw.circle(screen, (70, 150, 240), movement.position, 20)
 ```
 

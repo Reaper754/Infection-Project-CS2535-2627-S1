@@ -8,26 +8,21 @@ An **accumulator** stores elapsed time between frames. `clock.get_time() / 1000`
 
 Subtract the day length instead of resetting the accumulator to zero. This keeps any leftover time for the next day. Use a `while` loop so every completed day is counted if one frame covers several days. This also supports fast-forwarding.
 
-### Example: one day every five seconds
+### Example. Count completed days
 
-The dictionary below stores time between calls. Create it once outside the function. The simulation starts on day 0. Each completed day prints a message in the terminal. Daily actions belong inside the inner loop. These could include recording population counts or updating recovery times.
+The dictionary keeps time between frames. Each day represents five simulation seconds.
 
 ```python
-SECONDS_PER_DAY = 5.0
-calendar = {"day": 0, "elapsed_seconds": 0.0}
+calendar = {"day": 0, "seconds": 0.0}
 
 def run_sim():
-    seconds = clock.get_time() / 1000
-    calendar["elapsed_seconds"] += seconds
-
-    # Process every complete day and preserve the leftover time.
-    while calendar["elapsed_seconds"] >= SECONDS_PER_DAY:
-        calendar["elapsed_seconds"] -= SECONDS_PER_DAY
+    delta = clock.get_time() / 1000
+    calendar["seconds"] += delta
+    # Count every completed day and carry over the unused time.
+    while calendar["seconds"] >= 5:
+        calendar["seconds"] -= 5
         calendar["day"] += 1
-        print(f"Day {calendar['day']} completed")
-        # Record counts or apply daily simulation rules here.
-
-    pygame.display.set_caption(f"Simulation day: {calendar['day']}")
+        print(calendar["day"])
 ```
 
 **Documentation:** [Clock.get_time](https://pyga.me/docs/ref/time.html#pygame.time.Clock.get_time) · [Window caption](https://pyga.me/docs/ref/display.html#pygame.display.set_caption)
