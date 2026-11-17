@@ -8,7 +8,7 @@ Build a Python simulation that shows an infection spreading through a moving pop
    - [CS25 Assignment](README%20CS25.md) focuses on procedural programming, lists, dictionaries, and file handling.
    - [CS35 Assignment](README%20CS35.md) focuses on object-oriented programming, object relationships, and file handling.
 2. **Use the [recommended development process](development_process.md).** Build one part at a time. Test each part before adding the next. CS35 students should use the object design in their assignment wherever the process refers to dictionary-based people.
-3. **Use the [How To documents](_Help/How%20To).** These are quick references for the Pygame and Matplotlib features you will need. The numbered files follow the likely development order. Start with [01 - Set Up a Pygame Project from Scratch](_Help/How%20To/01%20-%20Set%20Up%20a%20Pygame%20Project%20from%20Scratch.md) when you are ready to create the simulation window. The BONUS guides provide additional support for the CS35 object design.
+3. **Use the How To documents for your course.** The numbered guides introduce Pygame and Matplotlib in development order. Try each example on its own to see how the feature works. [CS25 How To guides](_Help/How%20To%20-%20CS25) · [CS35 How To guides](_Help/How%20To%20-%20CS35)
 
 ## Your First Steps
 

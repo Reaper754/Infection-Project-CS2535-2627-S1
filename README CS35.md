@@ -4,7 +4,7 @@ Create a visual simulation of an infection spreading through a population. Users
 
 When the program starts, the user first interacts with a terminal menu. This menu lets them start a new simulation or view previous simulation data. It also provides the options to resume or rerun a saved simulation and exit the program. The Pygame simulation window opens when the user chooses to start, resume, or rerun a simulation.
 
-This project combines object-oriented programming, Pygame, graphing, and file handling. Your objects will represent people, a shared disease, and each person's movement. Build it in manageable stages. Start with the terminal menu and population data. Then add movement, infection rules, saving, and graphing. Test each feature as you add it. Use the [recommended development process](development_process.md) as a suggested order, replacing its dictionary-based people with the object design below. The [How To references](_Help/How%20To) explain useful library features. The BONUS guides cover vectors inside objects and saving vector data.
+This project combines object-oriented programming, Pygame, graphing, and file handling. Your objects will represent people, a shared disease, and each person's movement. Build it in manageable stages. Start with the terminal menu and population data. Then add movement, infection rules, saving, and graphing. Test each feature as you add it. Use the [recommended development process](development_process.md) as a suggested order, replacing its dictionary-based people with the object design below. The [How To references](_Help/How%20To%20-%20CS35) explain useful library features. The BONUS guides cover vectors inside objects and saving vector data.
 
 ## Project Requirements Checklist
 

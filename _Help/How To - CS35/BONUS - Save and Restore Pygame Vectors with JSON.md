@@ -30,6 +30,7 @@ def movement_from_data(data: dict) -> Movement:
     )
 
 original = Movement(pygame.Vector2(100, 300), pygame.Vector2(60, -20))
+# Encode the plain coordinates, then rebuild the object from the decoded data.
 saved_text = json.dumps(movement_to_data(original))
 loaded_data = json.loads(saved_text)
 restored = movement_from_data(loaded_data)

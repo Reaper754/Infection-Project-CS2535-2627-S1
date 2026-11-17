@@ -8,26 +8,18 @@ A **font** controls how text looks. `pygame.font.Font(None, 28)` uses Pygame's b
 
 Text must be drawn again after the background is cleared each frame. Render changing values again to show their latest contents. Draw text after people or other shapes so those shapes do not cover it.
 
-### Example: show a day and population counts
+### Example. Draw one label
 
-The sample values below stand in for your simulation's current values. The font initialization belongs after `pygame.init()` and before the main loop. The loop places each line 30 pixels below the previous line.
+Create the font after pygame.init(). The label starts 10 pixels from the top and left edges.
 
 ```python
+# Create the font once after Pygame is initialized.
 font = pygame.font.Font(None, 28)
-day = 3
-counts = {"susceptible": 70, "infected": 20, "recovered": 8, "dead": 2}
 
 def run_sim():
-    lines = [f"Day: {day}"]
-    for status, count in counts.items():
-        lines.append(f"{status.capitalize()}: {count}")
-
-    # Render each line, then copy it onto the window.
-    y = 10
-    for line in lines:
-        text_surface = font.render(line, True, (255, 255, 255))
-        screen.blit(text_surface, (10, y))
-        y += 30
+    # Render the text as a surface before copying it to the screen.
+    label = font.render("Day: 3", True, "white")
+    screen.blit(label, (10, 10))
 ```
 
 **Documentation:** [Fonts and rendering](https://pyga.me/docs/ref/font.html) · [Surface.blit](https://pyga.me/docs/ref/surface.html#pygame.Surface.blit)

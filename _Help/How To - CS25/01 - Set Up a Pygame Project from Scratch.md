@@ -16,7 +16,7 @@ The **main loop** keeps the program running. Each pass through the loop is a **f
 
 Drawing a frame starts by clearing the previous picture with `fill()`. Colours use `(red, green, blue)` amounts from `0` to `255`. New shapes or images go after the background is cleared. `pygame.display.flip()` shows the finished frame in the window. A **clock** limits how often the loop repeats. `pygame.quit()` closes Pygame after the loop ends.
 
-`run_sim` is our function for the simulation's input and drawing code. The main loop calls it once per frame. `screen` is the drawing surface created by the program. `events` is the list of messages collected for the current frame. The loop reads events once so both the close-button check and `run_sim` can use the same messages. Later examples show code to put inside this function.
+`run_sim` is our function for the simulation's input and drawing code. The main loop calls it once per frame. `screen` is the drawing surface created by the program. `events` is the list of messages collected for the current frame. The loop reads events once so both the close-button check and `run_sim` can use the same messages. Later Pygame examples use this setup. In those examples, pygame, screen, clock, events, and running come from this file. Any example state above run_sim is created once before the loop. Try each example on its own. In time-based examples, delta means the elapsed time for one frame in seconds. Divide clock.get_time() by 1000 to convert milliseconds to seconds.
 
 ### Basic example
 
@@ -30,6 +30,7 @@ def run_sim():
     pass
 
 # Prepare Pygame and create the drawing surface.
+# Initialize Pygame before creating the window or using its modules.
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("My Project")
@@ -38,12 +39,14 @@ running = True
 
 while running:
     # Handle the window's events each frame.
+    # Read the event queue once so the loop and run_sim share the same events.
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT:
             running = False
 
     # Clear the old frame, then draw the new one.
+    # Clear the previous frame before drawing the next one.
     screen.fill((30, 30, 40))
     run_sim()
     pygame.display.flip()
