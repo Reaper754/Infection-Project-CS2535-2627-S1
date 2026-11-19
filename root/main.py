@@ -2,16 +2,28 @@ import pygame
 import random
 import math
 
+class Calendar:
+    def __init__(self) -> None:
+        """Set the starting values for this calendar."""
+        self.day = 0
+        self.seconds = 0.0
+
+calendar = Calendar()
+
 class Circle:
-    def __init__(self, x: float, y: int, velocity_x: float, velocity_y: float, dead: bool) -> None:
+    def __init__(self, x: float, y: int, velocity_x: float, velocity_y: float, dead: bool, infected: bool) -> None:
         """Set the starting values for this circle."""
         self.x = x
         self.y = y
         self.velocity_x = velocity_x
         self.velocity_y = velocity_y
         self.dead = dead
+        self.infected = infected
 
     def move(self, delta: float, width: int, radius: int, height: int) -> None:
+        if self.dead:
+            self.velocity_x = 0
+            self.velocity_y = 0
         """Move horizontally and bounce at the walls."""
         self.x += self.velocity_x * delta
         self.y += self.velocity_y * delta
@@ -34,19 +46,37 @@ class Circle:
     def distance_to(self, other):
         return math.hypot(self.x - other.x, self.y - other.y)
 
+population = 10
+
+sick = random.randint(1, population)
+
 touching = set()
 close = set()
 dead = set()
 
 circles = []
-for index in range(10):
-    circle = Circle(random.randint(8, 792), random.randint(8, 592), random.randint(-60, 60), random.randint(-60, 60), False)
+for index in range(population):
+    if index == sick:
+        circle = Circle(random.randint(8, 792), random.randint(8, 592), random.randint(-60, 60), random.randint(-60, 60), False, True)
+    else:
+        circle = Circle(random.randint(8, 792), random.randint(8, 592), random.randint(-60, 60), random.randint(-60, 60), False, False)
     circles.append(circle)
 
 def run_sim():
+    touching.clear()
+    close.clear()
     """Handle simulation input and draw the current frame."""
     # Move the circles before measuring the current distances.
     delta = clock.get_time() / 1000
+    calendar.seconds += delta
+    # Count every completed day and carry over the unused time.
+    while calendar.seconds >= 5:
+        calendar.seconds -= 5
+        calendar.day += 1
+    pygame.display.set_caption(f"Day {calendar.day}")
+    # Render the text as a surface before copying it to the screen.
+    label = font.render(f"Day {calendar.day}", True, "white")
+    screen.blit(label, (10, 10))
     for index in range(len(circles)):
         circle = circles[index]
         speed = circle.velocity_x
@@ -58,35 +88,52 @@ def run_sim():
         for second_index in range(first_index + 1, len(circles)):
             second_circle = circles[second_index]
             if first_circle.distance_to(second_circle) <= 20:
-                touching.add(first_circle)
-                touching.add(second_circle)
+                if first_circle.infected == True or second_circle.infected == True:
+                    touching.add(first_circle)
+                    touching.add(second_circle)
             if first_circle.distance_to(second_circle) <= 50:
-                close.add(first_circle)
-                close.add(second_circle)
+                if first_circle.infected == True or second_circle.infected == True:
+                    close.add(first_circle)
+                    close.add(second_circle)
             distance = first_circle.distance_to(second_circle)
             distances.append(distance)
     for circle in circles:
         circle.move(delta, screen.get_width(), 10, screen.get_height())
-        if circle in touching:
-            color = "red"
-        elif circle in close:
-            color = "yellow"
-        else:
-            color = "skyblue"
-        if color == "red":
-            die = random.randint(1, 1)
+        if circle.infected == True:
+            die = random.randint(1, 1000)
             if die == 1:
                 dead.add(circle)
-                color = "grey"
-                died = Circle(circle.x, circle.y, 0, 0,True)
-                circles[circle] = died
+                circle.dead = True
+        if circle.dead == True:
+            color = "grey"
+        elif circle.infected == True:
+            color = "green"
+        elif circle in touching:
+            if circle.dead == True:
+                pass
+            else:
+                sick = random.randint(1, 10)
+                if sick == 1:
+                    circle.infected = True
+                    color = "green"
+                else:
+                    color = "red"
+        elif circle in close:
+            sick = random.randint(1, 50)
+            if sick == 1:
+                circle.infected = True
+                color = "green"
+            else:
+                color = "yellow"
+        else:
+            color = "skyblue"
         pygame.draw.circle(screen, color, (circle.x, circle.y), 10)
-
-    pygame.display.set_caption(f"{len(distances)} pairs. Closest: {min(distances):.1f} pixels")
 
 # Prepare Pygame and create the drawing surface.
 # Initialize Pygame before creating the window or using its modules.
 pygame.init()
+# Create the font once after Pygame is initialized.
+font = pygame.font.Font(None, 28)
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("My Project")
 clock = pygame.time.Clock()
