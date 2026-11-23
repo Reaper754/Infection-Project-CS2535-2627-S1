@@ -12,6 +12,8 @@ class Simulation:
         """Set the starting values for this simulation."""
         self.paused = False
         self.updates = 0
+        self.fast = False
+        self.seconds = 0.0
 
 simulation = Simulation()
 
@@ -88,6 +90,8 @@ def run_sim():
     # Handle a press once when its event arrives.
     for event in events:
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_f:
+                simulation.fast = not simulation.fast
             if event.key == pygame.K_SPACE:
                 simulation.paused = not simulation.paused
                 print("paused")
@@ -96,6 +100,10 @@ def run_sim():
                 print(event.pos)
         # Advance the simulation only while it is running.
     if not simulation.paused:
+        if simulation.fast:
+            multiplier = 4
+        else:
+            multiplier = 1
         simulation.updates += 1
         # Check whether a key is still held this frame.
         keys = pygame.key.get_pressed()
@@ -106,6 +114,7 @@ def run_sim():
         close.clear()
         # Move the circles before measuring the current distances.
         delta = clock.get_time() / 1000
+        simulation.seconds += delta * multiplier
         calendar.seconds += delta
         # Count every completed day and carry over the unused time.
         while calendar.seconds >= 5:
