@@ -1,11 +1,20 @@
-from random import randint
-
 import pygame
 import random
 import math
+import matplotlib.pyplot as plt
 
-from pygame.event import wait
+days = [1, 2, 3]
+group_a = [12, 9, 7]
+group_b = [3, 6, 8]
 
+# Plot each count list against the same days.
+plt.plot(days, group_a, color="blue", linestyle="-", label="Group A")
+plt.plot(days, group_b, color="orange", linestyle="--", label="Group B")
+plt.xlabel("Day")
+plt.ylabel("Count")
+# Match the lines to the labels supplied in plot().
+plt.legend()
+plt.show()
 
 class Simulation:
     def __init__(self) -> None:
@@ -26,7 +35,7 @@ class Calendar:
 calendar = Calendar()
 
 class Circle:
-    def __init__(self, x: float, y: int, velocity_x: float, velocity_y: float, dead: bool, infected: bool, immune: bool) -> None:
+    def __init__(self, x: float, y: int, velocity_x: float, velocity_y: float, dead: bool, infected: bool, immune: bool, recovered: bool) -> None:
         """Set the starting values for this circle."""
         self.x = x
         self.y = y
@@ -35,6 +44,7 @@ class Circle:
         self.dead = dead
         self.infected = infected
         self.immune = immune
+        self.recovered = recovered
 
     def move(self, delta: float, width: int, radius: int, height: int) -> None:
         if self.dead:
@@ -62,15 +72,10 @@ class Circle:
     def distance_to(self, other):
         return math.hypot(self.x - other.x, self.y - other.y)
 
-population = 50
+def prestart():
+    pass
 
-sick = random.randint(0, population)
-immune = random.randint(0, population)
-if sick == immune:
-    if sick == 50:
-        sick -= 1
-    else:
-        sick += 1
+population = 100
 
 touching = set()
 close = set()
@@ -78,23 +83,30 @@ dead = set()
 
 circles = []
 for index in range(population):
-    if index == sick:
-        circle = Circle(random.randint(8, 792), random.randint(8, 592), random.randint(-60, 60), random.randint(-60, 60), False, True, False)
-    elif index == immune:
-        circle = Circle(random.randint(8, 792), random.randint(8, 592), random.randint(-60, 60), random.randint(-60, 60), False, False, True)
+    sick = random.random()
+    immune = random.random()
+    if sick < 0.1:
+        circle = Circle(random.randint(8, 792), random.randint(8, 592), random.randint(-60, 60), random.randint(-60, 60), False, True, False, False)
+    elif immune < 0.1:
+        circle = Circle(random.randint(8, 792), random.randint(8, 592), random.randint(-60, 60), random.randint(-60, 60), False, False, True, False)
     else:
-        circle = Circle(random.randint(8, 792), random.randint(8, 592), random.randint(-60, 60), random.randint(-60, 60), False, False, False)
+        circle = Circle(random.randint(8, 792), random.randint(8, 592), random.randint(-60, 60), random.randint(-60, 60), False, False, False, False)
     circles.append(circle)
 
 def run_sim():
     # Handle a press once when its event arrives.
     for event in events:
+        # Use the same flag that controls the main loop.
+        global running
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_f:
                 simulation.fast = not simulation.fast
+                print("fast")
             if event.key == pygame.K_SPACE:
                 simulation.paused = not simulation.paused
                 print("paused")
+            if event.key == pygame.K_q:
+                running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 print(event.pos)
@@ -115,7 +127,8 @@ def run_sim():
         # Move the circles before measuring the current distances.
         delta = clock.get_time() / 1000
         simulation.seconds += delta * multiplier
-        calendar.seconds += delta
+        calendar.seconds += delta * multiplier
+        pygame.display.set_caption(f"{simulation.seconds:.1f} seconds")
         # Count every completed day and carry over the unused time.
         while calendar.seconds >= 5:
             calendar.seconds -= 5
@@ -127,7 +140,7 @@ def run_sim():
         for index in range(len(circles)):
             circle = circles[index]
             speed = circle.velocity_x
-            circle.x += speed * delta
+            circle.x += speed * delta * multiplier
         distances = []
         # Start the inner loop one position later so each pair is measured once.
         for first_index in range(len(circles)):
@@ -147,15 +160,21 @@ def run_sim():
         for circle in circles:
             circle.move(delta, screen.get_width(), 10, screen.get_height())
             if circle.infected == True:
-                die = random.randint(1, 1000)
-                if die == 1:
+                die = random.random()
+                recover = random.random()
+                if die < 0.001:
                     dead.add(circle)
                     circle.dead = True
                     circle.infected = False
+                if recover < 0.001 and circle.infected == True:
+                    circle.infected = False
+                    circle.recovered = True
             if circle.dead == True:
                 color = "grey"
             elif circle.immune == True:
                 color = "white"
+            elif circle.recovered == True:
+                color = "blue"
             elif circle.infected == True:
                 color = "green"
             elif circle in touching:
@@ -163,9 +182,11 @@ def run_sim():
                     pass
                 elif circle.immune == True:
                     pass
+                elif circle.recovered == True:
+                    pass
                 else:
-                    sick = random.randint(1, 10)
-                    if sick == 1:
+                    sick = random.random()
+                    if sick < 1:
                         circle.infected = True
                         color = "green"
                     else:
@@ -175,9 +196,11 @@ def run_sim():
                     pass
                 elif circle.immune == True:
                     pass
+                elif circle.recovered == True:
+                    pass
                 else:
-                    sick = random.randint(1, 50)
-                    if sick == 1:
+                    sick = random.random()
+                    if sick < 0.50:
                         circle.infected = True
                         color = "green"
                     else:
@@ -185,8 +208,6 @@ def run_sim():
             else:
                 color = "skyblue"
             pygame.draw.circle(screen, color, (circle.x, circle.y), 10)
-    pygame.display.set_caption(f"Updates: {simulation.updates}")
-
 
 # Prepare Pygame and create the drawing surface.
 # Initialize Pygame before creating the window or using its modules.
