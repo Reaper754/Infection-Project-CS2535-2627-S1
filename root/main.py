@@ -2,18 +2,31 @@ import pygame
 import random
 import math
 import matplotlib.pyplot as plt
+import csv
 
-days = [1, 2, 3]
-group_a = [12, 9, 7]
-group_b = [3, 6, 8]
+days = []
+populations = []
+sicks = []
+deads = []
+healeds = []
+healthys = []
+# Open the sample using the column names from its header.
+with open("data.csv", newline="", encoding="utf-8") as file:
+    # Convert both values before adding them to the graph data.
+    for row in csv.DictReader(file):
+        days.append(int(row["day"]))
+        populations.append(int(row["population"]))
+        sicks.append(int(row["sick"]))
+        deads.append(int(row["dead"]))
+        healeds.append(int(row["healed"]))
+        healthys.append(int(row["healthy"]))
 
-# Plot each count list against the same days.
-plt.plot(days, group_a, color="blue", linestyle="-", label="Group A")
-plt.plot(days, group_b, color="orange", linestyle="--", label="Group B")
+plt.plot(sicks)
+plt.plot(deads)
+plt.plot(healeds)
+plt.plot(healthys)
 plt.xlabel("Day")
-plt.ylabel("Count")
-# Match the lines to the labels supplied in plot().
-plt.legend()
+plt.ylabel("Population")
 plt.show()
 
 class Simulation:
@@ -72,22 +85,23 @@ class Circle:
     def distance_to(self, other):
         return math.hypot(self.x - other.x, self.y - other.y)
 
-def prestart():
-    pass
-
-population = 100
+population = int(input("How big is the population:"))
 
 touching = set()
 close = set()
 dead = set()
+unhealthy = set()
+healed = set()
+healthy = set()
+total = population
 
 circles = []
 for index in range(population):
     sick = random.random()
     immune = random.random()
-    if sick < 0.1:
+    if sick < 0.05:
         circle = Circle(random.randint(8, 792), random.randint(8, 592), random.randint(-60, 60), random.randint(-60, 60), False, True, False, False)
-    elif immune < 0.1:
+    elif immune < 0.05:
         circle = Circle(random.randint(8, 792), random.randint(8, 592), random.randint(-60, 60), random.randint(-60, 60), False, False, True, False)
     else:
         circle = Circle(random.randint(8, 792), random.randint(8, 592), random.randint(-60, 60), random.randint(-60, 60), False, False, False, False)
@@ -169,6 +183,7 @@ def run_sim():
                 if recover < 0.001 and circle.infected == True:
                     circle.infected = False
                     circle.recovered = True
+                    healed.add(circle)
             if circle.dead == True:
                 color = "grey"
             elif circle.immune == True:
@@ -189,6 +204,7 @@ def run_sim():
                     if sick < 1:
                         circle.infected = True
                         color = "green"
+                        unhealthy.add(circle)
                     else:
                         color = "red"
             elif circle in close:
@@ -203,10 +219,12 @@ def run_sim():
                     if sick < 0.50:
                         circle.infected = True
                         color = "green"
+                        unhealthy.add(circle)
                     else:
                         color = "yellow"
             else:
                 color = "skyblue"
+                healthy.add(circle)
             pygame.draw.circle(screen, color, (circle.x, circle.y), 10)
 
 # Prepare Pygame and create the drawing surface.
@@ -233,5 +251,7 @@ while running:
     run_sim()
     pygame.display.flip()
     clock.tick(60)  # Limit the loop to 60 frames per second.
+
+
 
 pygame.quit()
